@@ -2,6 +2,7 @@
 import flatpickr from 'flatpickr';
 // Додатковий імпорт стилів
 import 'flatpickr/dist/flatpickr.min.css';
+import Notiflix from 'notiflix';
 
 const refs = {
   timePickerInput: document.getElementById('datetime-picker'),
@@ -25,12 +26,14 @@ const options = {
   minuteIncrement: 1,
   onClose(selectedDates) {
     if (selectedDates[0] <= Date.now()) {
-      alert('Please choose a date in the future');
+      Notiflix.Report.failure('Please choose a date in the future');
+      // alert('Please choose a date in the future');
+
       refs.buttonStartTimer.disabled = isActive;
     }
     if (selectedDates[0] > Date.now()) {
       refs.buttonStartTimer.disabled = !isActive;
-
+      Notiflix.Notify.success('Success');
       choseDate = selectedDates[0];
     }
   },
@@ -49,6 +52,7 @@ function clickOnStart() {
   const idInterval = setInterval(() => {
     timeDifference = choseDate - Date.now();
     if (timeDifference < 0) {
+      Notiflix.Report.warning('Time over');
       clearInterval(idInterval);
       return;
     }
