@@ -14,10 +14,12 @@ const refs = {
   seconds: document.querySelector('span[data-seconds]'),
 };
 
-const isActive = true;
+const isDisabled = true;
 let choseDate;
 
-refs.buttonStartTimer.disabled = isActive;
+refs.buttonStartTimer.disabled = isDisabled;
+
+refs.buttonStartTimer.addEventListener('click', clickOnStart);
 
 const options = {
   enableTime: true,
@@ -25,14 +27,13 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    if (selectedDates[0] <= Date.now()) {
+    if (selectedDates[0] < Date.now()) {
       Notiflix.Report.failure('Please choose a date in the future');
-      // alert('Please choose a date in the future');
 
-      refs.buttonStartTimer.disabled = isActive;
+      refs.buttonStartTimer.disabled = isDisabled;
     }
     if (selectedDates[0] > Date.now()) {
-      refs.buttonStartTimer.disabled = !isActive;
+      refs.buttonStartTimer.disabled = !isDisabled;
       Notiflix.Notify.success('Success');
       choseDate = selectedDates[0];
     }
@@ -41,10 +42,9 @@ const options = {
 
 flatpickr(refs.timePickerInput, options);
 
-refs.buttonStartTimer.addEventListener('click', clickOnStart);
-
 function clickOnStart() {
-  refs.buttonStartTimer.disabled = isActive;
+  refs.buttonStartTimer.disabled = isDisabled;
+  refs.timePickerInput.disabled = isDisabled;
 
   let timeDifference = choseDate - Date.now();
   renderTime(convertMs(timeDifference));
